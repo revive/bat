@@ -7,7 +7,7 @@
  */
 
 // ---------------------------------------------------------
-#include <config.h>
+//#include <config.h>
 
 #include "BCIntegrate.h"
 #include "BCH1D.h"

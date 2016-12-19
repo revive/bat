@@ -1,0 +1,23 @@
+set(MODELS_BASE_SRC BATCalculator.cxx  BCEfficiencyFitter.cxx  BCFitter.cxx  BCGraphFitter.cxx  BCHistogramFitter.cxx  BCRooInterface.cxx)
+
+file(GLOB headers "${CMAKE_CURRENT_SOURCE_DIR}/*.h")
+#list(APPEND updated_headers "")
+foreach(HEADER ${headers})
+  message(${HEADER})
+  get_filename_component(HEADER_BASE ${HEADER} NAME)
+  add_custom_command(
+    OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/include/${PROJECT_NAME}/${HEADER_BASE}
+    DEPENDS ${HEADER}
+    COMMAND mkdir -p ${CMAKE_CURRENT_BINARY_DIR}/include/${PROJECT_NAME}
+    COMMAND sed 's|include \"\\\(BC.*\\.h\\\)\"|include <${PROJECT_NAME}/\\1>| \; s|include \"\\.\\./\\.\\./\\\(${PROJECT_NAME}/BC.*\\.h\\\)\"|include <\\1>|' ${HEADER} > ${CMAKE_CURRENT_BINARY_DIR}/include/${PROJECT_NAME}/${HEADER_BASE}
+    )
+  list(APPEND updated_headers ${CMAKE_CURRENT_BINARY_DIR}/include/${PROJECT_NAME}/${HEADER_BASE})
+endforeach()
+include_directories(${CMAKE_CURRENT_BINARY_DIR}/include)
+include_directories(${CMAKE_CURRENT_BINARY_DIR}/../../src/include)
+
+add_library(BATmodels SHARED ${MODELS_BASE_SRC})
+target_link_libraries(BATmodels ${ROOT_LIBRARIES} BAT)
+set_target_properties(BATmodels PROPERTIES VERSION ${BAT_VERSION_MAJOR} SOVERSION ${BAT_VERSION})
+
+install(TARGETS BATmodels LIBRARY DESTINATION lib)

@@ -7,7 +7,7 @@
  */
 
 // ---------------------------------------------------------
-#include <config.h>
+//#include <config.h>
 
 #include "BCEfficiencyFitter.h"
 
